@@ -1,17 +1,43 @@
 #  docker-compose up -d
 #  docker-compose down --remove-orphans
 
+# syntax=docker/dockerfile:1
+
+# FROM golang:1.20-alpine
+
+# WORKDIR /app
+
+# COPY *.go ./
+
+# RUN go build -o /keycloak-app
+
+# CMD [ "/keycloak-app" ]
+
+
 services:
+  app:
+    image: golang:1.20-alpine
+    #image: alpine/curl:3.14 #alpine:3.17.2
+    command: go run main.go
+    #command: tail -F anything
+    # tty: true # TODO: Remove.
+    working_dir: /app
+    volumes: 
+      - ./app:/app
+    networks:
+      - keycloak-mysql-network
+    ports:
+      - 8080:8080
+    depends_on:
+      - keycloak
+  # TODO: Make sure this starts AFTER mysql-keycloak is live.    
   keycloak:
     image: quay.io/keycloak/keycloak:20.0.3
     command: start-dev
     ports:
-      - 8080:8080
+      - 12345:8080
     networks:
       - keycloak-mysql-network
-    # working_dir: /app
-    # volumes:
-    #   - ./:/app
     environment:
       # TODO: replace with a config file.
       KEYCLOAK_ADMIN: admin

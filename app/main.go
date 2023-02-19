@@ -11,8 +11,8 @@ import (
 	"time"
 )
 
-const appHost = "localhost:8090"
-const keycloakHost = "http://localhost:8080"
+// TODO: Make this a flag.
+const keycloakHost = "http://keycloak:8080"
 const keycloakRealmId = "test-realm"
 const keycloakClientId = "test-client"
 
@@ -292,7 +292,8 @@ func main() {
 	// http.HandleFunc("/loggedin", loggedIn)
 	// http.HandleFunc("/index", index)
 
-	err = http.ListenAndServe(":8090", nil)
+	// TODO: make this a flag.
+	err = http.ListenAndServe(":8080", nil)
 	if err != nil {
 		panic(err)
 	}
